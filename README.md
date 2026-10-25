@@ -1,4 +1,4 @@
-﻿# 🎓 NSD Practicals — 1st Semester Web Technology & Full-Stack Lab
+﻿# 🎓 MSD Practicals — 1st Semester Web Technology & Full-Stack Lab
 
 ### Student Practical Record: Aryan Sharma (Roll No: 24CS101)
 > **Institution:** Department of Computer Science & Engineering  
