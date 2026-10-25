@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical 05 - Express.js Routing & CRUD Server</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Navbar -->
+    <header class="top-navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <div class="brand-badge">EX</div>
+          <div>
+            <div class="brand-title">Express.js API Engine <span class="practical-tag">Practical 05</span></div>
+            <div class="brand-sub">Modular Routing &amp; Full CRUD Operations</div>
+          </div>
+        </div>
+
+        <nav class="nav-pills">
+          <button class="nav-pill active" onclick="switchTab('client')">Interactive API Client</button>
+          <button class="nav-pill" onclick="switchTab('inventory')">Live Data Store (<span id="itemCount">0</span>)</button>
+          <button class="nav-pill" onclick="switchTab('manual')">Lab Manual &amp; Viva</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+      <!-- 1st Semester Student Lab Record Header -->
+      <div class="student-lab-card">
+        <div className="college-meta-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px dashed var(--border-color); padding-bottom:0.75rem;">
+          <div class="college-brand">
+            <span class="college-logo">🎓</span>
+            <div>
+              <h2 class="college-title">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING</h2>
+              <p class="college-subtitle">1st Semester Web Technology & Backend Lab Practical Record • Session 2026-27</p>
+            </div>
+          </div>
+          <div class="lab-verified-stamp">
+            <span class="stamp-dot"></span>
+            <span>LAB SUBMISSION APPROVED</span>
+          </div>
+        </div>
+
+        <div class="student-meta-grid">
+          <div class="meta-cell">
+            <span class="meta-label">STUDENT NAME</span>
+            <span class="meta-value">Aryan Sharma</span>
+          </div>
+          <div class="meta-cell">
+            <span class="meta-label">ROLL NO</span>
+            <span class="meta-value highlight-cyan">24CS101</span>
+          </div>
+          <div class="meta-cell">
+            <span class="meta-label">SEMESTER</span>
+            <span class="meta-value">1st Semester (B.Tech / MCA)</span>
+          </div>
+          <div class="meta-cell">
+            <span class="meta-label">PRACTICAL NO</span>
+            <span class="meta-value highlight-accent">Practical 05</span>
+          </div>
+          <div class="meta-cell">
+            <span class="meta-label">LAB BATCH</span>
+            <span class="meta-value">Batch B-1</span>
+          </div>
+        </div>
+
+        <div class="aim-box">
+          <span class="aim-badge">LAB AIM</span>
+          <p class="aim-content">Create a backend server using Express.js implementing routing and CRUD operation.</p>
+        </div>
+      </div>
+
+      <!-- TAB 1: INTERACTIVE API CLIENT -->
+      <section id="tab-client" class="tab-pane active">
+        <div class="tester-grid">
+          <!-- Request Builder Panel -->
+          <div class="panel-card">
+            <h2 class="panel-title">HTTP Request Dispatcher</h2>
+            <p class="panel-sub">Test Express endpoints via real HTTP requests</p>
+
+            <form id="requestForm" onsubmit="handleSendRequest(event)">
+              <div class="request-bar">
+                <select id="httpMethod" class="select-method" onchange="handleMethodChange()">
+                  <option value="GET">GET</option>
+                  <option value="POST">POST</option>
+                  <option value="PUT">PUT</option>
+                  <option value="DELETE">DELETE</option>
+                </select>
+
+                <input type="text" id="requestUrl" class="input-url" value="/api/products" />
+
+                <button type="submit" class="btn-send">Send Request</button>
+              </div>
+
+              <!-- Quick Endpoints Preset Pills -->
+              <div class="preset-pills">
+                <span class="preset-label">Presets:</span>
+                <button type="button" class="preset-btn" onclick="setPreset('GET', '/api/products')">GET All Products</button>
+                <button type="button" class="preset-btn" onclick="setPreset('GET', '/api/products/1')">GET Single Product (#1)</button>
+                <button type="button" class="preset-btn" onclick="setPreset('GET', '/api/products?category=Peripherals')">GET Filter Category</button>
+                <button type="button" class="preset-btn" onclick="setPreset('POST', '/api/products')">POST New Product</button>
+                <button type="button" class="preset-btn" onclick="setPreset('PUT', '/api/products/2')">PUT Update (#2)</button>
+                <button type="button" class="preset-btn" onclick="setPreset('DELETE', '/api/products/4')">DELETE (#4)</button>
+              </div>
+
+              <div id="bodyEditorGroup" class="form-group" style="display: none; margin-top: 1.25rem;">
+                <label class="form-label">Request Payload (JSON Body):</label>
+                <textarea id="requestBody" class="json-textarea" rows="6">{
+  "name": "Apple Magic Trackpad",
+  "category": "Peripherals",
+  "price": 149.99,
+  "stock": 30,
+  "description": "Multi-Touch surface with Force Touch sensors."
+}</textarea>
+              </div>
+            </form>
+          </div>
+
+          <!-- Response Inspector Panel -->
+          <div class="panel-card">
+            <div class="response-header">
+              <h2 class="panel-title">Server Response</h2>
+              <div class="status-indicator">
+                <span id="statusCodeBadge" class="status-badge status-init">Ready</span>
+                <span id="responseTime" class="latency-text">0 ms</span>
+              </div>
+            </div>
+
+            <div class="response-view-box">
+              <pre><code id="jsonResponse">// Send a request on the left to see live JSON response...</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: LIVE INVENTORY -->
+      <section id="tab-inventory" class="tab-pane">
+        <div class="panel-card">
+          <div class="table-header-row">
+            <div>
+              <h2 class="panel-title">In-Memory Products Database</h2>
+              <p class="panel-sub">Reflects current Express state updated by CRUD operations</p>
+            </div>
+            <button class="btn-refresh" onclick="loadInventoryTable()">Refresh List</button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="inventory-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Price ($)</th>
+                  <th>Stock</th>
+                  <th>Description</th>
+                  <th>Quick Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableBody">
+                <tr><td colspan="7" style="text-align:center;">Loading products from Express API...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: LAB MANUAL & VIVA -->
+      <section id="tab-manual" class="tab-pane">
+        <div class="panel-card manual-block">
+          <span class="manual-badge">Lab Documentation</span>
+          <h1 class="manual-heading">Practical 05: Express.js Routing &amp; CRUD Operations</h1>
+          <p class="manual-desc">Official curriculum lab manual covering RESTful HTTP methods, Express body parsing, URL parameters, status codes, and viva exam preparation.</p>
+
+          <div class="manual-grid">
+            <div class="manual-card-mini">
+              <h3>Aim &amp; Objective</h3>
+              <p>To design and implement a standalone <strong>Express.js backend server</strong> demonstrating modular routing using <code>express.Router()</code> and full <strong>CRUD (Create, Read, Update, Delete)</strong> operations with proper HTTP status codes.</p>
+            </div>
+            <div class="manual-card-mini">
+              <h3>CRUD &amp; HTTP Mapping</h3>
+              <ul class="manual-list">
+                <li><code>GET /api/products</code> &rarr; 200 OK (Read all)</li>
+                <li><code>GET /api/products/:id</code> &rarr; 200 OK or 404 (Read single)</li>
+                <li><code>POST /api/products</code> &rarr; 201 Created (Create)</li>
+                <li><code>PUT /api/products/:id</code> &rarr; 200 OK or 404 (Update)</li>
+                <li><code>DELETE /api/products/:id</code> &rarr; 200 OK or 404 (Delete)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="viva-section">
+            <h2 class="viva-heading">Viva Voce Questions &amp; Answers</h2>
+            <div id="vivaContainer" class="viva-accordion"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-container">
+        <span>College Web Development Practicals • Practical 05: Express.js Routing &amp; CRUD</span>
+        <span class="status-online">● Express Port 5000 Active</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practical 09: Multer File Upload & MongoDB Storage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-group">
+        <span class="badge practical-badge">Practical 09</span>
+        <div class="title-stack">
+          <h1>Multer File Upload & MongoDB Storage</h1>
+          <p>Multipart Form-Data Processing, Disk Storage & Metadata Persistence</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <div class="server-pill">
+          <span class="pulse-dot"></span>
+          <span>Port :5004</span>
+        </div>
+        <a href="#viva-section" class="btn-secondary btn-sm">Viva Q&A</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- 1st Semester Student Practical Lab Header -->
+    <div class="student-lab-card">
+      <div class="student-lab-header-row">
+        <div>
+          <div class="student-lab-badge">🎓 DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</div>
+          <h1 class="student-lab-title">1st Semester Web Technology &amp; Full-Stack Lab</h1>
+          <p class="student-lab-sub">Academic Lab Practical Record • Session 2026-27</p>
+        </div>
+        <div class="student-status-badge">
+          <span class="status-dot"></span>
+          LAB SUBMISSION APPROVED
+        </div>
+      </div>
+
+      <div class="student-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">STUDENT NAME</span>
+          <span class="meta-val highlight">Aryan Sharma</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">ROLL NUMBER</span>
+          <span class="meta-val">24CS101</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">SEMESTER / CLASS</span>
+          <span class="meta-val">1st Semester (B.Tech / MCA)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">PRACTICAL NO</span>
+          <span class="meta-val highlight">Practical 09</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">BATCH</span>
+          <span class="meta-val">Batch B-1</span>
+        </div>
+      </div>
+
+      <div class="student-aim-box">
+        <span class="aim-tag">ACADEMIC AIM:</span>
+        Create a file upload module using Multer middleware in Express.js, validate MIME types and file sizes, store files on disk, and maintain file metadata records in MongoDB.
+      </div>
+    </div>
+
+    <!-- Storage Statistics Overview -->
+    <section class="stats-banner glass-panel">
+      <div class="stat-box">
+        <span class="stat-label">Total Files Stored</span>
+        <span class="stat-number" id="stat-total-files">0</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-box">
+        <span class="stat-label">Total Storage Used</span>
+        <span class="stat-number highlight" id="stat-total-size">0.0 MB</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-box category-pills-box" id="category-pills">
+        <span class="stat-label">Category Breakdown</span>
+        <div class="pills-row" id="pills-container">
+          <span class="subtext">Loading metadata...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upload Module Section -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>File Ingestion Engine (Multipart / Multer)</h2>
+        <span class="pill-tag">POST /api/files/upload (5MB Limit)</span>
+      </div>
+
+      <div class="upload-card glass-panel">
+        <form id="upload-form" class="upload-form">
+          <!-- Drag and Drop Dropzone -->
+          <div class="dropzone" id="dropzone">
+            <div class="drop-icon">☁️</div>
+            <h3>Drag & Drop files here, or <span class="browse-link">Browse</span></h3>
+            <p class="drop-help">Supports JPEG, PNG, WEBP, GIF, PDF, TXT, DOCX (Max 5 MB each)</p>
+            <input type="file" id="file-input" class="hidden-input" accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.txt,.docx,.json">
+            <div id="file-preview-strip" class="file-preview-strip hidden">
+              <span id="selected-filename">No file selected</span>
+              <span id="selected-filesize" class="badge">0 KB</span>
+            </div>
+          </div>
+
+          <!-- Metadata Attributes -->
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="file-category">File Category *</label>
+              <select id="file-category" class="select-box">
+                <option value="Document">Document</option>
+                <option value="Image">Image</option>
+                <option value="Assignment">Assignment</option>
+                <option value="Lab-Report">Lab-Report</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="file-uploader">Uploader Identity *</label>
+              <input type="text" id="file-uploader" class="input-box" value="Computer Science Student" required>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="file-description">Description / Notes</label>
+              <input type="text" id="file-description" class="input-box" placeholder="e.g. Practical 09 submission report and code snapshot">
+            </div>
+          </div>
+
+          <div class="upload-actions">
+            <button type="submit" id="submit-upload-btn" class="btn-primary" disabled>
+              Upload to Server & Register in MongoDB
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Uploaded Files Explorer -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Persisted Files Repository</h2>
+        <div class="filter-actions">
+          <input type="text" id="search-input" placeholder="Search by original filename..." class="search-box">
+          <select id="category-filter" class="select-box">
+            <option value="All">All Categories</option>
+            <option value="Document">Documents</option>
+            <option value="Image">Images</option>
+            <option value="Assignment">Assignments</option>
+            <option value="Lab-Report">Lab Reports</option>
+          </select>
+          <button id="refresh-files-btn" class="btn-secondary btn-sm">Refresh Repository</button>
+        </div>
+      </div>
+
+      <div class="files-grid" id="files-grid">
+        <div class="loading-state">Loading file repository...</div>
+      </div>
+    </section>
+
+    <!-- Live JSON Inspector -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Live API Response & Metadata Inspector</h2>
+        <div class="inspector-meta">
+          <span id="response-status-badge" class="badge">STATUS: IDLE</span>
+          <span id="response-latency-badge" class="latency-badge">0 ms</span>
+        </div>
+      </div>
+      <div class="code-terminal glass-panel">
+        <div class="terminal-bar">
+          <span class="terminal-circle red"></span>
+          <span class="terminal-circle yellow"></span>
+          <span class="terminal-circle green"></span>
+          <span class="terminal-title">Raw MongoDB File Document Schema</span>
+        </div>
+        <pre><code id="json-viewer">// File metadata responses will appear here</code></pre>
+      </div>
+    </section>
+
+    <!-- Academic Viva Voce Section -->
+    <section id="viva-section" class="section-block viva-container glass-panel">
+      <div class="viva-header">
+        <span class="badge">Academic Viva Reference</span>
+        <h2>Practical 09: Viva Voce & Architecture Questions</h2>
+        <p>Comprehensive questions on Multer, MIME types, Multipart/form-data, and Storage Strategies.</p>
+      </div>
+
+      <div class="accordion-list">
+        <details class="accordion-item" open>
+          <summary>Q1: What is Multer and why is standard Express body-parser insufficient for file uploads?</summary>
+          <div class="accordion-content">
+            <p><strong>Multer</strong> is a Node.js middleware for handling <code>multipart/form-data</code>, which is the primary encoding format used for uploading files via HTML forms. Standard Express parsers (<code>express.json()</code> and <code>express.urlencoded()</code>) only parse string and JSON bodies; they cannot parse binary streams or reconstruct fragmented file chunks transmitted across multiple boundaries.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q2: What is the difference between Multer's `diskStorage` and `memoryStorage`?</summary>
+          <div class="accordion-content">
+            <p>
+              - <strong>diskStorage:</strong> Writes incoming files directly to the server's filesystem disk. It is ideal for persistent storage, large files (PDFs, videos, high-res images), and prevents server RAM exhaustion.<br>
+              - <strong>memoryStorage:</strong> Buffers the incoming file in RAM as a Node.js <code>Buffer</code> object. It is best suited for transient files that will be immediately piped to cloud buckets (like AWS S3 or Cloudinary) or processed with in-memory image transformers (e.g., Sharp).
+            </p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q3: Why should file metadata be stored in MongoDB while files are kept on disk or cloud storage?</summary>
+          <div class="accordion-content">
+            <p>MongoDB documents have a strict 16MB document size limit (BSON specification) and storing raw binary blobs inside database documents degrades cache performance and inflates backups. The industry best practice is to save the physical binary payload on disk or object storage (AWS S3) and record lightweight, indexable metadata (file path, original name, MIME type, size, upload date) in MongoDB for rapid searching and querying.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q4: How does Multer handle File Size Limits and File Type Filtering?</summary>
+          <div class="accordion-content">
+            <p>Multer accepts a <code>limits</code> option (e.g. <code>fileSize: 5 * 1024 * 1024</code> for 5MB). When exceeded, Multer terminates the stream and throws a <code>MulterError: LIMIT_FILE_SIZE</code>. File filtering is implemented via the <code>fileFilter(req, file, cb)</code> hook, which inspects <code>file.mimetype</code> or extension and invokes <code>cb(null, true)</code> to accept or <code>cb(new Error(...), false)</code> to reject.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q5: Why is unique filename generation critical when saving to disk?</summary>
+          <div class="accordion-content">
+            <p>If two users upload different files with the same name (e.g. <code>resume.pdf</code>), saving them with original names causes silent file overwrites and potential data leaks. Generating unique filenames using timestamps and cryptographic random strings (e.g. <code>Date.now() + '-' + crypto.randomBytes(6).toString('hex') + ext</code>) ensures zero collisions.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q6: What is `multipart/form-data` encoding?</summary>
+          <div class="accordion-content">
+            <p><code>multipart/form-data</code> divides the HTTP request body into multiple distinct parts, each separated by a unique delimiter boundary string. Each part contains its own headers (such as <code>Content-Disposition: form-data; name="file"; filename="abc.jpg"</code> and <code>Content-Type: image/jpeg</code>) followed by the binary or text payload, allowing text fields and binary files to be sent together in a single request.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q7: How does `res.download()` work in Express?</summary>
+          <div class="accordion-content">
+            <p><code>res.download(filePath, originalFilename)</code> transfers the file located at <code>filePath</code> as an attachment. It automatically sets the HTTP header <code>Content-Disposition: attachment; filename="originalFilename"</code>, which prompts the user’s web browser to open the "Save File" dialog instead of attempting to display the raw content.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q8: What security considerations must be addressed when building a file upload module?</summary>
+          <div class="accordion-content">
+            <p>
+              1. <strong>Preventing Executable Execution:</strong> Disallow extensions like <code>.exe</code>, <code>.sh</code>, <code>.php</code>, <code>.js</code>, and store uploads outside public web root.<br>
+              2. <strong>DoS Mitigation:</strong> Enforce strict file size limits.<br>
+              3. <strong>Path Traversal Prevention:</strong> Sanitize file names to strip characters like <code>../</code>.<br>
+              4. <strong>Magic Byte Verification:</strong> Verify file headers rather than trusting the user-submitted file extension alone.
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

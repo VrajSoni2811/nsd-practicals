@@ -1,0 +1,252 @@
+{
+  "info": {
+    "_postman_id": "a9e6d421-4f11-4820-9cb5-8271e89cf101",
+    "name": "Practical 06 - Student Records Management REST API",
+    "description": "Comprehensive Postman test collection with automated test scripts for Practical 06 Express.js RESTful API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. GET All Students (Default)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Response is successful with array data', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.data).to.be.an('array');",
+              "});",
+              "pm.test('Response time is under 200ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/students",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "students"]
+        }
+      }
+    },
+    {
+      "name": "2. GET Students with Pagination & Filter",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Pagination metadata exists', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json).to.have.property('page');",
+              "    pm.expect(json).to.have.property('totalPages');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/students?department=Computer Science&page=1&limit=2",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "students"],
+          "query": [
+            { "key": "department", "value": "Computer Science" },
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "2" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. GET Single Student by ID (#1)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Student ID matches 1', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.data.id).to.eql(1);",
+              "    pm.expect(json.data.fullName).to.eql('Aarav Sharma');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/students/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "students", "1"]
+        }
+      }
+    },
+    {
+      "name": "4. POST Create New Student",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test('New student returned with generated ID', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.success).to.be.true;",
+              "    pm.expect(json.data).to.have.property('id');",
+              "    pm.expect(json.data.rollNo).to.eql('STU-1006');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rollNo\": \"STU-1006\",\n  \"fullName\": \"Karan Johar\",\n  \"email\": \"karan.johar@college.edu\",\n  \"phone\": \"9876501234\",\n  \"department\": \"Information Technology\",\n  \"semester\": 5,\n  \"cgpa\": 9.15,\n  \"gender\": \"Male\",\n  \"skills\": [\"React\", \"Express\", \"AWS\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/students",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "students"]
+        }
+      }
+    },
+    {
+      "name": "5. PUT Update Student Record (#2)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('CGPA updated successfully', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.data.cgpa).to.eql(9.95);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Priya Patel (Distinction)\",\n  \"cgpa\": 9.95,\n  \"semester\": 7\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/students/2",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "students", "2"]
+        }
+      }
+    },
+    {
+      "name": "6. DELETE Student Record (#5)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Deleted record confirmed', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.success).to.be.true;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/students/5",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "students", "5"]
+        }
+      }
+    },
+    {
+      "name": "7. GET 404 Test (Non-existent ID)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 404 Not Found', function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "pm.test('Error message returned', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.success).to.be.false;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/students/9999",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "students", "9999"]
+        }
+      }
+    }
+  ]
+}

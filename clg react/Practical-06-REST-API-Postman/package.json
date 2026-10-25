@@ -1,0 +1,15 @@
+{
+  "name": "practical-06-rest-api-postman",
+  "version": "1.0.0",
+  "description": "Practical 06: RESTful APIs for Student Records Management using Express.js and Postman testing",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

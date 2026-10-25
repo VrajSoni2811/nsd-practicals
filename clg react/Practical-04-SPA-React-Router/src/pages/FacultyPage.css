@@ -1,0 +1,131 @@
+.faculty-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.faculty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 950px) {
+  .faculty-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.faculty-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  backdrop-filter: var(--glass-blur);
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+}
+
+.faculty-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.faculty-card-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.faculty-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+  flex-shrink: 0;
+}
+
+.faculty-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.faculty-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.faculty-role {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.faculty-dept {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.faculty-bio {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+}
+
+.courses-taught-box {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.taught-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+
+.taught-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.taught-pill {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.faculty-contact-row {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.contact-faculty-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--primary);
+  font-size: 0.825rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.contact-faculty-btn:hover {
+  color: #818cf8;
+}

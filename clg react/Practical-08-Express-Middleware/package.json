@@ -1,0 +1,15 @@
+{
+  "name": "practical-08-express-middleware",
+  "version": "1.0.0",
+  "description": "Practical 08: Express.js Routing, Middleware Pipeline and Request Handling",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

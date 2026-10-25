@@ -1,0 +1,72 @@
+.stat-card {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary);
+}
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.stat-title {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.stat-icon-wrapper {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.stat-value {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.stat-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.stat-accent-indigo::before { background: #6366f1; }
+.stat-accent-indigo .stat-icon-wrapper { background: var(--primary-light); color: var(--primary); }
+
+.stat-accent-emerald::before { background: #10b981; }
+.stat-accent-emerald .stat-icon-wrapper { background: var(--accent-emerald-light); color: var(--accent-emerald); }
+
+.stat-accent-rose::before { background: #f43f5e; }
+.stat-accent-rose .stat-icon-wrapper { background: var(--accent-rose-light); color: var(--accent-rose); }
+
+.stat-accent-amber::before { background: #f59e0b; }
+.stat-accent-amber .stat-icon-wrapper { background: var(--accent-amber-light); color: var(--accent-amber); }

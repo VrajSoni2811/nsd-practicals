@@ -1,0 +1,12 @@
+{
+  "name": "practical-12-socketio-chat-app",
+  "version": "1.0.0",
+  "description": "Practical 12: Real-Time Multi-Room Chat Application using Socket.IO, React and Node.js",
+  "type": "module",
+  "scripts": {
+    "start:server": "node server/server.js",
+    "dev:server": "node --watch server/server.js",
+    "dev:client": "cd client && npm run dev",
+    "build:client": "cd client && npm run build"
+  }
+}

@@ -1,0 +1,69 @@
+.instructor-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.instructor-card-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.instructor-large-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+  flex-shrink: 0;
+}
+
+.instructor-info {
+  flex: 1;
+}
+
+.instructor-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+
+.instructor-card-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.instructor-role {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.instructor-bio {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.instructor-stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.85rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.inst-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}

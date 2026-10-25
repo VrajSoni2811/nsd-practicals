@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practical 11: Blog System with JWT Authentication & RBAC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-group">
+        <span class="badge practical-badge">Practical 11</span>
+        <div class="title-stack">
+          <h1>Blog System: JWT Auth & Role-Based Access Control</h1>
+          <p>Admin, Author & Reader Scopes with Cryptographic JWT Verification</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <div class="server-pill">
+          <span class="pulse-dot"></span>
+          <span>Port :5006</span>
+        </div>
+        <a href="#viva-section" class="btn-secondary btn-sm">Viva Q&A</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- 1st Semester Student Practical Lab Header -->
+    <div class="student-lab-card">
+      <div class="student-lab-header-row">
+        <div>
+          <div class="student-lab-badge">🎓 DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</div>
+          <h1 class="student-lab-title">1st Semester Web Technology &amp; Full-Stack Lab</h1>
+          <p class="student-lab-sub">Academic Lab Practical Record • Session 2026-27</p>
+        </div>
+        <div class="student-status-badge">
+          <span class="status-dot"></span>
+          LAB SUBMISSION APPROVED
+        </div>
+      </div>
+
+      <div class="student-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">STUDENT NAME</span>
+          <span class="meta-val highlight">Aryan Sharma</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">ROLL NUMBER</span>
+          <span class="meta-val">24CS101</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">SEMESTER / CLASS</span>
+          <span class="meta-val">1st Semester (B.Tech / MCA)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">PRACTICAL NO</span>
+          <span class="meta-val highlight">Practical 11</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">BATCH</span>
+          <span class="meta-val">Batch B-1</span>
+        </div>
+      </div>
+
+      <div class="student-aim-box">
+        <span class="aim-tag">ACADEMIC AIM:</span>
+        Create a Blog Management System implementing CRUD operations, JSON Web Token (JWT) user authentication, and granular Role-Based Access Control (RBAC: Admin, Author, Reader).
+      </div>
+    </div>
+
+    <!-- Role Switcher & Active Session Bar -->
+    <section class="session-card glass-panel">
+      <div class="session-left">
+        <span class="stat-label">Active Authentication State</span>
+        <div class="user-profile-row">
+          <div class="avatar-circle" id="user-avatar">👤</div>
+          <div>
+            <h3 id="user-display-name">Guest / Unauthenticated</h3>
+            <p id="user-display-email" class="subtext">Public read-only permissions</p>
+          </div>
+          <span id="user-role-badge" class="role-badge Guest">Guest</span>
+        </div>
+      </div>
+
+      <div class="session-right">
+        <span class="stat-label">Quick Switch Role (Evaluation Presets)</span>
+        <div class="role-switch-pills">
+          <button class="role-pill-btn" data-email="admin@blog.io" data-pass="password123">👑 Login Admin</button>
+          <button class="role-pill-btn" data-email="author@blog.io" data-pass="password123">✍️ Login Author</button>
+          <button class="role-pill-btn" data-email="reader@blog.io" data-pass="password123">📖 Login Reader</button>
+          <button class="role-pill-btn logout" id="logout-btn">Log Out</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RBAC Permission Matrix & Capabilities -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Active RBAC Permission Capabilities</h2>
+        <span class="pill-tag" id="token-status-pill">JWT Status: Not Authenticated</span>
+      </div>
+
+      <div class="matrix-card glass-panel">
+        <div class="matrix-grid">
+          <div class="matrix-cell" id="perm-read">
+            <span class="perm-icon">✅</span>
+            <div class="perm-info">
+              <strong>Read Articles</strong>
+              <small>Public scope (All users)</small>
+            </div>
+          </div>
+
+          <div class="matrix-cell" id="perm-comment">
+            <span class="perm-icon">🔒</span>
+            <div class="perm-info">
+              <strong>Post Comments</strong>
+              <small>Requires any authenticated role</small>
+            </div>
+          </div>
+
+          <div class="matrix-cell" id="perm-create">
+            <span class="perm-icon">🔒</span>
+            <div class="perm-info">
+              <strong>Publish New Articles</strong>
+              <small>Author & Admin roles only</small>
+            </div>
+          </div>
+
+          <div class="matrix-cell" id="perm-edit-own">
+            <span class="perm-icon">🔒</span>
+            <div class="perm-info">
+              <strong>Edit Own Articles</strong>
+              <small>Author ownership check</small>
+            </div>
+          </div>
+
+          <div class="matrix-cell" id="perm-admin-override">
+            <span class="perm-icon">🔒</span>
+            <div class="perm-info">
+              <strong>Global Admin Override</strong>
+              <small>Delete/Edit ANY user's post</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Article Management & Feed -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Published Articles Feed</h2>
+        <div class="filter-actions">
+          <input type="text" id="search-input" placeholder="Search by title, author or keywords..." class="search-box">
+          <select id="category-filter" class="select-box">
+            <option value="All">All Categories</option>
+            <option value="Architecture">Architecture</option>
+            <option value="Security">Security</option>
+            <option value="React">React</option>
+            <option value="NodeJS">NodeJS</option>
+          </select>
+          <button id="open-publish-modal-btn" class="btn-primary" disabled>
+            + Publish Article
+          </button>
+        </div>
+      </div>
+
+      <div class="articles-grid" id="articles-grid">
+        <div class="loading-state">Loading articles repository...</div>
+      </div>
+    </section>
+
+    <!-- Live JSON Response Inspector -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Live API Response & RBAC Exception Inspector</h2>
+        <div class="inspector-meta">
+          <span id="response-status-badge" class="badge">STATUS: IDLE</span>
+          <span id="response-latency-badge" class="latency-badge">0 ms</span>
+        </div>
+      </div>
+      <div class="code-terminal glass-panel">
+        <div class="terminal-bar">
+          <span class="terminal-circle red"></span>
+          <span class="terminal-circle yellow"></span>
+          <span class="terminal-circle green"></span>
+          <span class="terminal-title">HTTP Payload & JWT Claims</span>
+        </div>
+        <pre><code id="json-viewer">// Responses and RBAC errors will appear here</code></pre>
+      </div>
+    </section>
+
+    <!-- Viva Voce Section -->
+    <section id="viva-section" class="section-block viva-container glass-panel">
+      <div class="viva-header">
+        <span class="badge">Academic Viva Reference</span>
+        <h2>Practical 11: Viva Voce & Security Architecture</h2>
+        <p>Comprehensive questions on JWT structure, RBAC, password security, and stateless sessions.</p>
+      </div>
+
+      <div class="accordion-list">
+        <details class="accordion-item" open>
+          <summary>Q1: What is JWT (JSON Web Token) and what are its three components?</summary>
+          <div class="accordion-content">
+            <p>A <strong>JSON Web Token (JWT)</strong> is a compact, URL-safe means of representing claims to be transferred between two parties. It consists of three parts separated by dots (<code>.</code>):
+            <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
+              <li><strong>Header:</strong> Specifies the token type (<code>JWT</code>) and cryptographic hashing algorithm (e.g. <code>HS256</code>).</li>
+              <li><strong>Payload:</strong> Contains claims (user ID, username, role, expiration timestamp <code>exp</code>).</li>
+              <li><strong>Signature:</strong> Generated by signing the encoded header and payload with a server secret key to verify data integrity.</li>
+            </ol>
+            </p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q2: What is Role-Based Access Control (RBAC) and how was it implemented here?</summary>
+          <div class="accordion-content">
+            <p><strong>RBAC</strong> is a security paradigm that restricts system access based on assigned user roles. We implemented a higher-order middleware <code>authorizeRoles('Admin', 'Author')</code>. It inspects the claims decoded from the JWT; if the role is authorized, control proceeds to the controller. Additionally, fine-grained object ownership was implemented so Authors can only edit/delete their own articles, while Admins enjoy global override privileges.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q3: Why are JWTs called 'Stateless' and what advantage does that offer?</summary>
+          <div class="accordion-content">
+            <p>Unlike traditional session-cookie architectures where the server stores session IDs in RAM or Redis, a JWT contains all user identity and permission claims directly inside the signed payload. The server does not need to perform a database query on every request; it simply validates the cryptographic signature locally, enabling effortless horizontal scaling across multiple servers.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q4: How should JWTs be transmitted in HTTP requests?</summary>
+          <div class="accordion-content">
+            <p>The standard protocol is to send the token in the <code>Authorization</code> request header prefixed by <code>Bearer </code>:
+            <br><code>Authorization: Bearer &lt;jwt_token_string&gt;</code>. The server splits the header by space and extracts the token at index 1.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q5: What happens when a JWT expires?</summary>
+          <div class="accordion-content">
+            <p>When the current epoch time exceeds the token's <code>exp</code> timestamp, the <code>jwt.verify()</code> library throws a <code>TokenExpiredError</code>. The server responds with <code>HTTP 401 Unauthorized</code>, prompting the client to refresh the token using a refresh token or log in again.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q6: What is the difference between Authentication and Authorization?</summary>
+          <div class="accordion-content">
+            <p>
+              - <strong>Authentication (AuthN):</strong> Verifying <em>who</em> the user is (e.g. validating email and password credentials). Returns HTTP 401 Unauthorized if unauthenticated.<br>
+              - <strong>Authorization (AuthZ):</strong> Verifying <em>what permissions</em> an authenticated user has (e.g. determining if a Reader has permission to delete an article). Returns HTTP 403 Forbidden if permission is denied.
+            </p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q7: How are password hashes secured in production applications?</summary>
+          <div class="accordion-content">
+            <p>Passwords must never be stored in plaintext. They are salted (appending random cryptographic strings) and hashed using adaptive, compute-intensive algorithms like <strong>bcrypt</strong> or <strong>argon2</strong>. The work factor (cost salt rounds) ensures brute-force and rainbow-table attacks are computationally infeasible.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q8: How can a compromised JWT be revoked before its expiration?</summary>
+          <div class="accordion-content">
+            <p>Because JWTs are stateless, they remain valid until expiration. To revoke a token immediately:
+            <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
+              <li>Maintain a fast in-memory token blacklist (e.g. in Redis) checked on each request.</li>
+              <li>Implement short-lived access tokens (e.g. 15 minutes) paired with revocable refresh tokens stored in the database.</li>
+              <li>Increment a <code>tokenVersion</code> counter on the user document and embed it in the token payload.</li>
+            </ol>
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <!-- Publish Article Modal -->
+  <div id="publish-modal" class="modal-backdrop hidden">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <h3>Publish New Technical Article</h3>
+        <button id="close-modal-btn" class="close-btn">&times;</button>
+      </div>
+      <form id="publish-form" class="modal-form">
+        <div class="form-group">
+          <label for="post-title">Article Title *</label>
+          <input type="text" id="post-title" placeholder="e.g. Scaling Express Applications with Redis Cache" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="post-category">Category *</label>
+            <select id="post-category">
+              <option value="Architecture">Architecture</option>
+              <option value="Security">Security</option>
+              <option value="React">React</option>
+              <option value="NodeJS">NodeJS</option>
+              <option value="Database">Database</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="post-readtime">Read Time (minutes)</label>
+            <input type="number" id="post-readtime" value="5" min="1" max="60">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="post-excerpt">Short Excerpt / Summary *</label>
+          <input type="text" id="post-excerpt" placeholder="Brief 1-2 sentence overview for the article card..." required>
+        </div>
+
+        <div class="form-group">
+          <label for="post-content">Full Markdown / Text Content *</label>
+          <textarea id="post-content" rows="6" placeholder="Write full technical article body here..." required></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="cancel-modal-btn" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary">Publish to Feed</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.spa-hero {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.12) 50%, rgba(6, 182, 212, 0.12) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2.5rem;
+  text-align: center;
+  position: relative;
+  box-shadow: var(--shadow-md);
+}
+
+.hero-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--primary-light);
+  color: #818cf8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  margin-bottom: 1rem;
+}
+
+.hero-main-title {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-main-sub {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 720px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.hero-cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary);
+  color: #ffffff;
+  padding: 0.75rem 1.6rem;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.btn-primary-link:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.btn-secondary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  padding: 0.75rem 1.6rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.btn-secondary-link:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Stats */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 500px) {
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  text-align: center;
+  backdrop-filter: var(--glass-blur);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.2rem;
+}
+
+.stat-caption {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Features */
+.spa-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .spa-features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  backdrop-filter: var(--glass-blur);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.icon-indigo { background: var(--primary-light); color: var(--primary); }
+.icon-cyan { background: var(--accent-cyan-light); color: var(--accent-cyan); }
+.icon-emerald { background: var(--accent-emerald-light); color: var(--accent-emerald); }
+
+.feature-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+}
+
+.feature-card code {
+  color: #818cf8;
+  background: rgba(99, 102, 241, 0.12);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.8em;
+}
+
+.card-explore-link {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary);
+}

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practical 08: Express.js Routing & Middleware Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-group">
+        <span class="badge practical-badge">Practical 08</span>
+        <div class="title-stack">
+          <h1>Express.js Middleware & Request Pipeline</h1>
+          <p>Application-Level, Router-Level, Built-in, Third-Party & Error Handling Middleware</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <div class="server-pill">
+          <span class="pulse-dot"></span>
+          <span>Port :5003</span>
+        </div>
+        <a href="#viva-section" class="btn-secondary btn-sm">Viva Q&A</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- 1st Semester Student Practical Lab Header -->
+    <div class="student-lab-card">
+      <div class="student-lab-header-row">
+        <div>
+          <div class="student-lab-badge">🎓 DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</div>
+          <h1 class="student-lab-title">1st Semester Web Technology &amp; Full-Stack Lab</h1>
+          <p class="student-lab-sub">Academic Lab Practical Record • Session 2026-27</p>
+        </div>
+        <div class="student-status-badge">
+          <span class="status-dot"></span>
+          LAB SUBMISSION APPROVED
+        </div>
+      </div>
+
+      <div class="student-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">STUDENT NAME</span>
+          <span class="meta-val highlight">Aryan Sharma</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">ROLL NUMBER</span>
+          <span class="meta-val">24CS101</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">SEMESTER / CLASS</span>
+          <span class="meta-val">1st Semester (B.Tech / MCA)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">PRACTICAL NO</span>
+          <span class="meta-val highlight">Practical 08</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">BATCH</span>
+          <span class="meta-val">Batch B-1</span>
+        </div>
+      </div>
+
+      <div class="student-aim-box">
+        <span class="aim-tag">ACADEMIC AIM:</span>
+        Create a backend server using Express.js implementing modular routing, application-level, router-level, built-in, third-party, and error-handling middleware.
+      </div>
+    </div>
+
+    <!-- Visual Middleware Pipeline Map -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Interactive Middleware Execution Pipeline</h2>
+        <span class="pill-tag">HTTP Request Lifecycle Flow</span>
+      </div>
+      <div class="pipeline-card glass-panel">
+        <div class="pipeline-track" id="pipeline-track">
+          <div class="pipe-node" id="node-request">
+            <div class="node-icon">📥</div>
+            <span class="node-title">HTTP Request</span>
+            <span class="node-type">Client Initiator</span>
+          </div>
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-node" id="node-logger">
+            <div class="node-icon">📝</div>
+            <span class="node-title">App Logger</span>
+            <span class="node-type">Application-Level</span>
+          </div>
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-node" id="node-limiter">
+            <div class="node-icon">⏱️</div>
+            <span class="node-title">Rate Limiter</span>
+            <span class="node-type">Token Bucket (12 req/10s)</span>
+          </div>
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-node" id="node-parser">
+            <div class="node-icon">📦</div>
+            <span class="node-title">Body Parser</span>
+            <span class="node-type">Built-in json()</span>
+          </div>
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-node" id="node-auth">
+            <div class="node-icon">🛡️</div>
+            <span class="node-title">Auth Guard</span>
+            <span class="node-type">Router-Level Header Check</span>
+          </div>
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-node" id="node-validator">
+            <div class="node-icon">🔍</div>
+            <span class="node-title">Validator</span>
+            <span class="node-type">Payload Sanitizer</span>
+          </div>
+          <div class="pipe-arrow">➜</div>
+          <div class="pipe-node" id="node-handler">
+            <div class="node-icon">⚡</div>
+            <span class="node-title">Controller</span>
+            <span class="node-type">Business Logic</span>
+          </div>
+          <div class="pipe-arrow error-branch">➜</div>
+          <div class="pipe-node error-node" id="node-error">
+            <div class="node-icon">🚨</div>
+            <span class="node-title">Error Handler</span>
+            <span class="node-type">4-Arg (err,req,res,next)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Test Suite Grid -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Middleware Test Scenarios</h2>
+        <button id="reset-limit-btn" class="btn-secondary btn-sm">Reset Rate Limiter</button>
+      </div>
+
+      <div class="tests-grid">
+        <!-- Scenario 1 -->
+        <div class="scenario-card glass-panel">
+          <div class="scenario-header">
+            <span class="status-code green">200 OK</span>
+            <h4>1. Public Route</h4>
+          </div>
+          <p>Passes through Logger & Rate Limiter only. No authentication required.</p>
+          <div class="endpoint-meta"><code>GET /api/public/status</code></div>
+          <button class="btn-primary run-test-btn" data-test="public">Execute Request</button>
+        </div>
+
+        <!-- Scenario 2 -->
+        <div class="scenario-card glass-panel">
+          <div class="scenario-header">
+            <span class="status-code red">401 Unauthorized</span>
+            <h4>2. Auth Guard (No Key)</h4>
+          </div>
+          <p>Attempts protected route without <code>x-api-key</code> header. AuthGuard halts pipeline.</p>
+          <div class="endpoint-meta"><code>GET /api/protected/profile</code></div>
+          <button class="btn-primary run-test-btn" data-test="auth-missing">Execute Request</button>
+        </div>
+
+        <!-- Scenario 3 -->
+        <div class="scenario-card glass-panel">
+          <div class="scenario-header">
+            <span class="status-code green">200 OK</span>
+            <h4>3. Auth Guard (Valid Key)</h4>
+          </div>
+          <p>Sends valid <code>x-api-key: secret-token-2026</code>. Passes AuthGuard to Controller.</p>
+          <div class="endpoint-meta"><code>GET /api/protected/profile</code></div>
+          <button class="btn-primary run-test-btn" data-test="auth-valid">Execute Request</button>
+        </div>
+
+        <!-- Scenario 4 -->
+        <div class="scenario-card glass-panel">
+          <div class="scenario-header">
+            <span class="status-code amber">429 Rate Limited</span>
+            <h4>4. Rate Limiter Stress</h4>
+          </div>
+          <p>Rapidly fires 15 requests in burst to exceed the 12 req/10s threshold.</p>
+          <div class="endpoint-meta"><code>Burst Trigger (15 calls)</code></div>
+          <button class="btn-primary run-test-btn" data-test="rate-limit">Spam 15 Requests</button>
+        </div>
+
+        <!-- Scenario 5 -->
+        <div class="scenario-card glass-panel">
+          <div class="scenario-header">
+            <span class="status-code red">400 Bad Request</span>
+            <h4>5. Payload Validation Failure</h4>
+          </div>
+          <p>Sends negative amount to <code>/transfer</code>. Validator catches schema violation.</p>
+          <div class="endpoint-meta"><code>POST /api/protected/transfer</code></div>
+          <button class="btn-primary run-test-btn" data-test="validation-fail">Trigger Bad Request</button>
+        </div>
+
+        <!-- Scenario 6 -->
+        <div class="scenario-card glass-panel">
+          <div class="scenario-header">
+            <span class="status-code red">503 Exception</span>
+            <h4>6. Centralized Error Catch</h4>
+          </div>
+          <p>Triggers server exception. Pipeline catches and redirects to 4-arg Error Handler.</p>
+          <div class="endpoint-meta"><code>GET /api/test/error</code></div>
+          <button class="btn-primary run-test-btn" data-test="server-error">Simulate Server Error</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Execution Timeline & Inspector -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Live Execution Timeline & Response Inspector</h2>
+        <div class="inspector-meta">
+          <span id="response-code-pill" class="badge">STATUS: IDLE</span>
+          <span id="latency-pill" class="latency-badge">0 ms</span>
+        </div>
+      </div>
+
+      <div class="inspector-layout">
+        <!-- Middleware Execution Steps -->
+        <div class="steps-card glass-panel">
+          <div class="terminal-bar">
+            <span class="terminal-title">Sequential Middleware Lifecycle Trace</span>
+          </div>
+          <div class="trace-steps-list" id="trace-list">
+            <div class="empty-trace">Click any test scenario above to trace the middleware lifecycle.</div>
+          </div>
+        </div>
+
+        <!-- Raw JSON Inspector -->
+        <div class="code-terminal glass-panel">
+          <div class="terminal-bar">
+            <span class="terminal-circle red"></span>
+            <span class="terminal-circle yellow"></span>
+            <span class="terminal-circle green"></span>
+            <span class="terminal-title">Response JSON & Headers</span>
+          </div>
+          <pre><code id="json-viewer">// Output payload and error structures will appear here</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Viva Voce Section -->
+    <section id="viva-section" class="section-block viva-container glass-panel">
+      <div class="viva-header">
+        <span class="badge">Practical Examination Reference</span>
+        <h2>Practical 08: Viva Voce & Middleware Mechanics</h2>
+        <p>Comprehensive questions on Express middleware types, lifecycle, next() semantics, and error handling.</p>
+      </div>
+
+      <div class="accordion-list">
+        <details class="accordion-item" open>
+          <summary>Q1: What is Middleware in Express.js and what can it perform?</summary>
+          <div class="accordion-content">
+            <p><strong>Middleware</strong> functions are functions that have access to the request object (<code>req</code>), response object (<code>res</code>), and the <code>next</code> middleware function in the application’s request-response cycle. They can:
+            <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
+              <li>Execute any code (logging, metrics, authentication).</li>
+              <li>Make changes to the request and response objects (e.g. parsing JSON, attaching <code>req.user</code>).</li>
+              <li>End the request-response cycle (e.g. sending HTTP 401 or 400).</li>
+              <li>Call the <code>next()</code> middleware in the stack.</li>
+            </ol>
+            </p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q2: What is the significance of the <code>next()</code> function?</summary>
+          <div class="accordion-content">
+            <p>If the current middleware does not end the request-response cycle, it <strong>must</strong> invoke <code>next()</code> to pass control to the subsequent middleware function in the stack. Failing to invoke <code>next()</code> or send a response leaves the HTTP client hanging indefinitely until a network timeout occurs.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q3: Name the 5 fundamental types of middleware in Express.js.</summary>
+          <div class="accordion-content">
+            <p>
+              1. <strong>Application-level middleware:</strong> Bound to <code>app.use()</code> or <code>app.METHOD()</code>.<br>
+              2. <strong>Router-level middleware:</strong> Bound to an instance of <code>express.Router()</code>.<br>
+              3. <strong>Built-in middleware:</strong> Bundled in Express, such as <code>express.json()</code> and <code>express.static()</code>.<br>
+              4. <strong>Third-party middleware:</strong> Installed via npm, such as <code>cors</code>, <code>morgan</code>, or <code>helmet</code>.<br>
+              5. <strong>Error-handling middleware:</strong> Defined strictly with four parameters: <code>(err, req, res, next)</code>.
+            </p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q4: How does Express identify an Error-Handling Middleware?</summary>
+          <div class="accordion-content">
+            <p>Express checks function arity (the number of declared parameters via <code>fn.length</code>). Standard middleware functions take 2 or 3 arguments: <code>(req, res, next)</code>. Error-handling middleware must explicitly declare exactly <strong>four arguments</strong>: <code>(err, req, res, next)</code>. If you omit <code>next</code>, Express treats it as standard middleware and will not route errors to it.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q5: What happens when you pass an argument to <code>next(error)</code>?</summary>
+          <div class="accordion-content">
+            <p>When any value (except the string <code>'route'</code>) is passed to <code>next()</code>, Express skips all remaining standard middleware and router handlers and routes directly to the next registered <strong>Error-handling middleware</strong>.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q6: Why is middleware order critical in Express?</summary>
+          <div class="accordion-content">
+            <p>Middleware executes strictly in the sequence it is registered with <code>app.use()</code>. For instance, body parsing middleware (<code>express.json()</code>) must be placed <em>before</em> any route handlers that read <code>req.body</code>, and error-handling middleware must be registered <em>after</em> all routes so it can catch propagated errors.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q7: How does Rate Limiting protect web servers?</summary>
+          <div class="accordion-content">
+            <p>Rate limiting restricts the number of requests a given client or IP address can make within a specified timeframe. It prevents denial-of-service (DoS) attacks, brute-force password guessing, and API scraping by responding with <code>HTTP 429 Too Many Requests</code> once the limit is breached.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q8: How can custom middleware attach data to the Request object?</summary>
+          <div class="accordion-content">
+            <p>Since the <code>req</code> object is a mutable JavaScript reference passed through all middleware functions in a single lifecycle, middleware can attach custom properties such as <code>req.user = decodedToken</code>, <code>req.startTime = Date.now()</code>, or <code>req.trace = []</code> for subsequent handlers to inspect.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

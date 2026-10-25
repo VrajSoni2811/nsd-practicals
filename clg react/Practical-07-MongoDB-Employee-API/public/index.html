@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practical 07: MongoDB Atlas Employee Management API</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-group">
+        <span class="badge practical-badge">Practical 07</span>
+        <div class="title-stack">
+          <h1>MongoDB Atlas & Mongoose Employee API</h1>
+          <p>Cloud NoSQL Document Storage, Schema Validation & Aggregation Pipeline</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <div id="db-status-pill" class="status-pill checking">
+          <span class="status-dot"></span>
+          <span id="db-status-text">Checking Cluster...</span>
+        </div>
+        <a href="#viva-section" class="btn-secondary btn-sm">Viva Voce Q&A</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- 1st Semester Student Practical Lab Header -->
+    <div class="student-lab-card">
+      <div class="student-lab-header-row">
+        <div>
+          <div class="student-lab-badge">🎓 DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</div>
+          <h1 class="student-lab-title">1st Semester Web Technology &amp; Full-Stack Lab</h1>
+          <p class="student-lab-sub">Academic Lab Practical Record • Session 2026-27</p>
+        </div>
+        <div class="student-status-badge">
+          <span class="status-dot"></span>
+          LAB SUBMISSION APPROVED
+        </div>
+      </div>
+
+      <div class="student-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">STUDENT NAME</span>
+          <span class="meta-val highlight">Aryan Sharma</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">ROLL NUMBER</span>
+          <span class="meta-val">24CS101</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">SEMESTER / CLASS</span>
+          <span class="meta-val">1st Semester (B.Tech / MCA)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">PRACTICAL NO</span>
+          <span class="meta-val highlight">Practical 07</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">BATCH</span>
+          <span class="meta-val">Batch B-1</span>
+        </div>
+      </div>
+
+      <div class="student-aim-box">
+        <span class="aim-tag">ACADEMIC AIM:</span>
+        Develop an Employee Management API integrating Express.js with MongoDB Atlas, defining Mongoose schemas, performing CRUD operations, and computing department aggregations.
+      </div>
+    </div>
+
+    <!-- Atlas Connection Alert / Banner -->
+    <section class="atlas-card glass-panel">
+      <div class="atlas-info">
+        <div class="icon-wrap">🍃</div>
+        <div>
+          <h3>Database Engine State: <span id="db-mode-label" class="highlight">Connecting...</span></h3>
+          <p id="db-message-label" class="subtext">Initialising cluster connectivity handshake...</p>
+        </div>
+      </div>
+      <div class="atlas-actions">
+        <button id="refresh-analytics-btn" class="btn-primary btn-sm">Refresh Aggregation</button>
+      </div>
+    </section>
+
+    <!-- Analytics Dashboard (Aggregation Pipeline) -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Department Analytics Pipeline ($group & $avg)</h2>
+        <span class="pill-tag">GET /api/employees/analytics/overview</span>
+      </div>
+      <div class="stats-grid" id="analytics-grid">
+        <div class="stat-card skeleton">Loading department analytics...</div>
+      </div>
+    </section>
+
+    <!-- Interactive CRUD Controls & Table -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Employee Records Directory</h2>
+        <div class="filter-actions">
+          <input type="text" id="search-input" placeholder="Search by name, empId or email..." class="search-box">
+          <select id="department-filter" class="select-box">
+            <option value="All">All Departments</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Product">Product</option>
+            <option value="Design">Design</option>
+            <option value="Finance">Finance</option>
+            <option value="HR">HR</option>
+          </select>
+          <select id="sort-select" class="select-box">
+            <option value="latest">Sort: Latest</option>
+            <option value="salary_desc">Salary: High to Low</option>
+            <option value="salary_asc">Salary: Low to High</option>
+          </select>
+          <button id="open-add-modal-btn" class="btn-primary">+ Add Employee</button>
+        </div>
+      </div>
+
+      <!-- Employee Table Container -->
+      <div class="table-card glass-panel">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Emp ID</th>
+                <th>Employee Name</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Salary (₹)</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="employee-table-body">
+              <tr>
+                <td colspan="7" class="loading-cell">Loading documents from MongoDB...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- API Response Inspector -->
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Live API Response Inspector</h2>
+        <div class="inspector-meta">
+          <span id="response-status-badge" class="badge">STATUS: IDLE</span>
+          <span id="response-latency-badge" class="latency-badge">0 ms</span>
+        </div>
+      </div>
+      <div class="code-terminal glass-panel">
+        <div class="terminal-bar">
+          <span class="terminal-circle red"></span>
+          <span class="terminal-circle yellow"></span>
+          <span class="terminal-circle green"></span>
+          <span class="terminal-title">Response JSON & HTTP Headers</span>
+        </div>
+        <pre><code id="json-viewer">// Make requests or filters above to inspect live MongoDB JSON responses</code></pre>
+      </div>
+    </section>
+
+    <!-- Lab Manual & Viva Voce Section -->
+    <section id="viva-section" class="section-block viva-container glass-panel">
+      <div class="viva-header">
+        <span class="badge">Academic Viva Reference</span>
+        <h2>Practical 07: Viva Voce & Conceptual Architecture</h2>
+        <p>Comprehensive Q&A covering MongoDB Atlas, Mongoose ODM, NoSQL vs SQL, and Aggregation Pipelines.</p>
+      </div>
+
+      <div class="accordion-list">
+        <details class="accordion-item" open>
+          <summary>Q1: What is MongoDB Atlas and how does it differ from a local MongoDB instance?</summary>
+          <div class="accordion-content">
+            <p><strong>MongoDB Atlas</strong> is a fully managed cloud database service hosted across AWS, Google Cloud, or Azure. It eliminates the operational overhead of database configuration, automated patching, hardware provisioning, and automated horizontal scaling. In contrast, a local MongoDB instance runs as a standalone daemon (<code>mongod</code>) on your local operating system, requiring manual backups, replication management, and local resource allocation.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q2: What is Mongoose and why is it used with Express.js?</summary>
+          <div class="accordion-content">
+            <p><strong>Mongoose</strong> is an Object Data Modeling (ODM) library for MongoDB and Node.js. Although MongoDB is schema-less by nature, enterprise web applications require structured data integrity. Mongoose enforces strict schema definitions, data type validation, pre/post middleware hooks, virtual computed properties, and relationship population, making database operations predictable and robust.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q3: Explain the structure and purpose of a MongoDB Connection String URI.</summary>
+          <div class="accordion-content">
+            <p>A standard Atlas SRV URI follows this format: <code>mongodb+srv://&lt;username&gt;:&lt;password&gt;@cluster0.abcde.mongodb.net/&lt;dbname&gt;?retryWrites=true&amp;w=majority</code>. The <code>mongodb+srv</code> prefix indicates DNS Seedlist Connection which dynamically resolves replica set members. The query parameter <code>retryWrites=true</code> ensures transient network failures retry writes automatically, and <code>w=majority</code> guarantees write acknowledgment across quorum replica nodes.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q4: What is the MongoDB Aggregation Pipeline and how was it used in this practical?</summary>
+          <div class="accordion-content">
+            <p>The <strong>Aggregation Pipeline</strong> is a multi-stage framework for data processing and statistical analysis. Documents pass through sequential stages where each stage transforms the input documents. In our practical, we used <code>$group</code> with accumulators <code>$sum: 1</code> (headcount), <code>$avg: "$salary"</code> (average department salary), and <code>$sum: "$salary"</code> (total payroll) followed by <code>$sort: { headcount: -1 }</code>.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q5: What is the difference between SQL (Relational) and NoSQL (Document-based)?</summary>
+          <div class="accordion-content">
+            <p>SQL databases (MySQL, PostgreSQL) store structured records in tabular rows and columns with strict relational constraints and ACID transactions across tables. NoSQL Document databases (MongoDB) store self-contained, polymorphic JSON-like BSON documents. They support horizontal scaling (sharding), dynamic nested objects, arrays, and high write throughput without rigid migrations.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q6: What are Mongoose Schema Validation and Virtuals?</summary>
+          <div class="accordion-content">
+            <p><strong>Schema Validation</strong> verifies that documents conform to predefined rules (e.g., <code>required</code>, <code>min</code>, <code>max</code>, <code>enum</code>, or custom regex) before persisting to the database. <strong>Virtuals</strong> are computed document attributes that can be read or set, but are not stored directly in MongoDB (e.g., a <code>formattedSalary</code> virtual computing <code>₹${this.salary.toLocaleString()}</code>).</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q7: How does Mongoose prevent Injection Attacks and enforce security?</summary>
+          <div class="accordion-content">
+            <p>Unlike raw SQL where query concatenation causes SQL Injection, Mongoose schema casting automatically sanitizes query arguments against schema types. If an attacker attempts to pass a MongoDB operator object like <code>{ "$gt": "" }</code> to a string field, Mongoose type casting rejects or stringifies it, preventing NoSQL injection.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary>Q8: What are MongoDB Indexes and why are they critical in production?</summary>
+          <div class="accordion-content">
+            <p>Without indexes, MongoDB must perform a <em>collection scan</em> (inspecting every single document in the collection) to satisfy a query. An index creates a dedicated B-tree data structure that stores the values of specific fields in sorted order, reducing query lookup complexity from <code>O(N)</code> to <code>O(log N)</code>. In this practical, <code>empId</code> and <code>email</code> are indexed with unique constraints.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add Employee Modal Dialog -->
+  <div id="add-modal" class="modal-backdrop hidden">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <h3>Create New Employee Document</h3>
+        <button id="close-modal-btn" class="close-btn">&times;</button>
+      </div>
+      <form id="add-employee-form" class="modal-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="modal-empId">Employee ID *</label>
+            <input type="text" id="modal-empId" placeholder="EMP-106" required>
+          </div>
+          <div class="form-group">
+            <label for="modal-name">Full Name *</label>
+            <input type="text" id="modal-name" placeholder="Rohan Sharma" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="modal-email">Corporate Email *</label>
+            <input type="email" id="modal-email" placeholder="rohan.s@corp.io" required>
+          </div>
+          <div class="form-group">
+            <label for="modal-dept">Department *</label>
+            <select id="modal-dept" required>
+              <option value="Engineering">Engineering</option>
+              <option value="Product">Product</option>
+              <option value="Design">Design</option>
+              <option value="Finance">Finance</option>
+              <option value="HR">HR</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="modal-designation">Designation *</label>
+            <input type="text" id="modal-designation" placeholder="Full Stack Developer" required>
+          </div>
+          <div class="form-group">
+            <label for="modal-salary">Monthly Salary (₹) *</label>
+            <input type="number" id="modal-salary" placeholder="95000" min="20000" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="cancel-modal-btn" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary">Save to MongoDB</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

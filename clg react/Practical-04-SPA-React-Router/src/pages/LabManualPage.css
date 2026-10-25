@@ -1,0 +1,220 @@
+.lab-manual-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.manual-banner {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.manual-pill {
+  display: inline-block;
+  background: var(--primary-light);
+  color: #818cf8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  margin-bottom: 0.75rem;
+}
+
+.manual-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.manual-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.manual-details-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 850px) {
+  .manual-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.manual-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  backdrop-filter: var(--glass-blur);
+}
+
+.manual-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.manual-card-head h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.manual-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.manual-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.manual-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.manual-list li svg {
+  color: var(--accent-emerald);
+  flex-shrink: 0;
+}
+
+.manual-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.manual-table td {
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.manual-table td strong {
+  color: var(--text-primary);
+}
+
+.manual-section-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  backdrop-filter: var(--glass-blur);
+}
+
+.section-head-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--primary);
+  margin-bottom: 1.25rem;
+}
+
+.section-head-row h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.comparison-table th {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.comparison-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.viva-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.viva-item {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  transition: var(--transition);
+}
+
+.viva-item.expanded {
+  border-color: rgba(99, 102, 241, 0.35);
+  background: rgba(99, 102, 241, 0.03);
+}
+
+.viva-question-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.viva-number {
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.viva-question-text {
+  flex: 1;
+}
+
+.viva-answer-content {
+  padding: 0 1.25rem 1.25rem 3rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  white-space: pre-line;
+  border-top: 1px dashed rgba(255, 255, 255, 0.06);
+  padding-top: 0.85rem;
+}

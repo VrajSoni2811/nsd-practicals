@@ -1,0 +1,241 @@
+.student-form-card {
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+}
+
+.form-header-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  gap: 1rem;
+}
+
+.form-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.header-icon {
+  color: var(--primary);
+}
+
+.form-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.student-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 850px) {
+  .form-grid-2, .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field-label {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.req-star {
+  color: var(--accent-rose);
+  font-weight: 700;
+}
+
+.field-input {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.95rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: var(--transition);
+}
+
+.field-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+.field-input.input-error {
+  border-color: var(--border-error);
+  background: rgba(244, 63, 94, 0.05);
+}
+
+.field-select {
+  cursor: pointer;
+}
+
+.field-error-msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.775rem;
+  color: var(--accent-rose);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Semester Radios */
+.semester-radio-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sem-radio-pill {
+  flex: 1;
+  min-width: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.5rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sem-radio-pill input {
+  display: none;
+}
+
+.sem-radio-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.sem-radio-pill.selected {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+/* Gender Radios */
+.gender-radio-row {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.4rem 0;
+}
+
+.gender-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.gender-label input[type="radio"] {
+  accent-color: var(--primary);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Skills Checkbox Grid */
+.skills-checkbox-grid {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.skill-checkbox-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.skill-checkbox-pill input {
+  accent-color: var(--primary);
+  width: 14px;
+  height: 14px;
+}
+
+.skill-checkbox-pill.checked {
+  background: var(--primary-light);
+  color: #818cf8;
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+/* Declaration */
+.declaration-field {
+  padding: 0.85rem 1rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.declaration-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.declaration-label input {
+  accent-color: var(--primary);
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+}
+
+.form-action-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}

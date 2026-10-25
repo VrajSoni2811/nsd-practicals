@@ -1,0 +1,232 @@
+.spa-app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Student 1st Sem Lab Card Header */
+.student-lab-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid #6366f1;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.college-meta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px dashed var(--border-color);
+  padding-bottom: 0.75rem;
+}
+
+.college-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.college-logo {
+  font-size: 2rem;
+}
+
+.college-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+}
+
+.college-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.lab-verified-stamp {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+}
+
+.stamp-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.student-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.08);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+}
+
+[data-theme='light'] .student-meta-grid {
+  background: #f1f5f9;
+}
+
+.meta-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.meta-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.meta-value {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.meta-value.highlight-cyan {
+  color: #06b6d4;
+  font-family: var(--font-mono);
+}
+
+.meta-value.highlight-accent {
+  color: #8b5cf6;
+}
+
+.aim-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(99, 102, 241, 0.06);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-md);
+}
+
+.aim-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: #6366f1;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.aim-content {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  line-height: 1.45;
+}
+
+
+/* Breadcrumbs Bar */
+.spa-breadcrumbs-bar {
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.5rem 1.5rem;
+}
+
+.breadcrumbs-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.775rem;
+  color: var(--text-muted);
+}
+
+.crumb-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.crumb-link:hover {
+  color: var(--primary);
+}
+
+.crumb-separator {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.crumb-current {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Main Viewport */
+.spa-main-viewport {
+  flex: 1;
+  padding: 2rem 1.5rem;
+}
+
+.spa-content-container {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+/* Footer */
+.spa-footer {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  padding: 1.5rem;
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.footer-text-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-lead {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.footer-sub {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+}
+
+.router-badge {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}

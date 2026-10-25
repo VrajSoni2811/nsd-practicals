@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical 06 - RESTful APIs & Postman Testing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Navbar -->
+    <header class="top-navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <div class="brand-badge">PM</div>
+          <div>
+            <div class="brand-title">Student REST API &amp; Postman Hub <span class="practical-tag">Practical 06</span></div>
+            <div class="brand-sub">Express.js RESTful Services • Automated Postman Test Suite</div>
+          </div>
+        </div>
+
+        <nav class="nav-pills">
+          <button class="nav-pill active" onclick="switchTab('postman')">Postman Test Suite</button>
+          <button class="nav-pill" onclick="switchTab('students')">Student Directory (<span id="totalBadge">0</span>)</button>
+          <button class="nav-pill" onclick="switchTab('manual')">Lab Manual &amp; Viva</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- 1st Semester Student Practical Lab Header -->
+      <div class="student-lab-card">
+        <div class="student-lab-header-row">
+          <div>
+            <div class="student-lab-badge">🎓 DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</div>
+            <h1 class="student-lab-title">1st Semester Web Technology &amp; Full-Stack Lab</h1>
+            <p class="student-lab-sub">Academic Lab Practical Record • Session 2026-27</p>
+          </div>
+          <div class="student-status-badge">
+            <span class="status-dot"></span>
+            LAB SUBMISSION APPROVED
+          </div>
+        </div>
+
+        <div class="student-meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">STUDENT NAME</span>
+            <span class="meta-val highlight">Aryan Sharma</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">ROLL NUMBER</span>
+            <span class="meta-val">24CS101</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">SEMESTER / CLASS</span>
+            <span class="meta-val">1st Semester (B.Tech / MCA)</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">PRACTICAL NO</span>
+            <span class="meta-val highlight">Practical 06</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">BATCH</span>
+            <span class="meta-val">Batch B-1</span>
+          </div>
+        </div>
+
+        <div class="student-aim-box">
+          <span class="aim-tag">ACADEMIC AIM:</span>
+          Develop and test RESTful APIs using Express.js and validate HTTP status codes, JSON responses, and endpoints using Postman / Automated Test Suite.
+        </div>
+      </div>
+
+      <!-- TAB 1: POSTMAN TEST RUNNER SIMULATOR -->
+      <section id="tab-postman" class="tab-pane active">
+        <!-- Top Toolbar -->
+        <div class="postman-toolbar-card">
+          <div class="toolbar-left">
+            <h2 class="section-title">Automated Postman Collection Runner</h2>
+            <p class="section-sub">Execute pre-configured REST API tests with automated assertions (pm.test)</p>
+          </div>
+          <div class="toolbar-actions">
+            <button class="btn-run-all" onclick="runAllPostmanTests()">▶ Run All 7 Tests (Newman Mode)</button>
+            <a href="/postman/Student_Management_API.postman_collection.json" download="Student_Management_API.postman_collection.json" class="btn-download-col">
+              ⬇ Download Postman Collection (.json)
+            </a>
+          </div>
+        </div>
+
+        <div class="test-runner-grid">
+          <!-- Left: Test Scenarios List -->
+          <div class="panel-card test-cases-panel">
+            <h3 class="panel-heading">Collection Request Suite</h3>
+            <div id="testCasesList" class="test-cases-list"></div>
+          </div>
+
+          <!-- Right: Live Execution Console & Output -->
+          <div class="panel-card output-panel">
+            <div class="output-header-bar">
+              <span id="activeTestTitle" class="active-test-title">Select a request or click "Run All Tests"</span>
+              <span id="testResultBadge" class="result-badge-idle">Idle</span>
+            </div>
+
+            <!-- Assertions Report -->
+            <div id="assertionsContainer" class="assertions-box" style="display: none;">
+              <h4 class="assertions-title">Test Assertions Passed:</h4>
+              <ul id="assertionsList" class="assertions-list"></ul>
+            </div>
+
+            <div class="output-json-container">
+              <div class="json-header-label">Response JSON Payload</div>
+              <pre><code id="liveJsonCode">// Click any test on the left to inspect server response...</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: LIVE STUDENT DIRECTORY -->
+      <section id="tab-students" class="tab-pane">
+        <div class="panel-card">
+          <div class="directory-head-row">
+            <div>
+              <h2 class="panel-heading">Live Student Records (In-Memory REST Store)</h2>
+              <p class="section-sub">Synchronized with Express.js server endpoints on Port 5001</p>
+            </div>
+            <button class="btn-refresh" onclick="loadStudentsDirectory()">Refresh Records</button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="students-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Roll No</th>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>Department</th>
+                  <th>Sem</th>
+                  <th>CGPA</th>
+                  <th>Skills</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody">
+                <tr><td colspan="8" style="text-align:center;">Loading records...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: LAB MANUAL & VIVA -->
+      <section id="tab-manual" class="tab-pane">
+        <div class="panel-card manual-card">
+          <span class="manual-tag">Curriculum Lab Documentation</span>
+          <h1 class="manual-main-title">Practical 06: Student RESTful API &amp; Postman Testing</h1>
+          <p class="manual-lead">Comprehensive guide on REST architectural constraints, HTTP status codes, idempotency, and automated test scripting with Postman.</p>
+
+          <div class="theory-grid">
+            <div class="theory-box">
+              <h3>REST Constraints</h3>
+              <ul class="theory-list">
+                <li><strong>Statelessness:</strong> Each request must contain all necessary context.</li>
+                <li><strong>Resource Identification:</strong> Clean URI paths using nouns (<code>/api/students</code>).</li>
+                <li><strong>Standard Verbs:</strong> GET, POST, PUT, PATCH, DELETE.</li>
+                <li><strong>Self-Descriptive Messages:</strong> Clear HTTP Status Codes &amp; MIME types.</li>
+              </ul>
+            </div>
+            <div class="theory-box">
+              <h3>Postman Automated Assertions</h3>
+              <p style="font-size:0.875rem; color:var(--text-secondary); line-height:1.55;">
+                Postman scripts run in a sandboxed JavaScript runtime after each HTTP response is received. We test status codes, payload schemas, and response latency:
+              </p>
+              <pre class="code-snippet-box"><code>pm.test("Status code is 200 OK", function () {
+    pm.response.to.have.status(200);
+});
+pm.test("Data is an array", function () {
+    pm.expect(pm.response.json().data).to.be.an('array');
+});</code></pre>
+            </div>
+          </div>
+
+          <div class="viva-container-block">
+            <h2 class="viva-main-heading">Viva Voce Questions &amp; Answers</h2>
+            <div id="vivaList" class="viva-list"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-container">
+        <span>College Web Development Practicals • Practical 06: REST APIs &amp; Postman Testing</span>
+        <span class="online-indicator">● Express Server Running on Port 5001</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
